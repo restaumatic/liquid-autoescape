@@ -4,28 +4,37 @@ require "liquid/autoescape/template_variable"
 require "liquid/autoescape/safe_string"
 
 module Liquid
-  class Block
-    alias non_escaping_render_token render_token
+  class BlockBody
 
-    def render_token(token, context)
-      output = non_escaping_render_token(token, context)
+    def render_node(context, output, node)
+      os = BlockBody.render_node(context, [], node)
+      o = os[0] || ""
 
-      if !token.is_a? Variable
-        return output
+      if !node.is_a? Variable
+        output << o
+        return
+      end
+
+      if context["in_capture"]
+        output << o
+        return
       end
 
       if !Autoescape.configuration.global? && !context[Autoescape::ENABLED_FLAG]
-        return output
+        output << o
+        return
       end
 
-      variable = Autoescape::TemplateVariable.from_liquid_variable(token)
+      variable = Autoescape::TemplateVariable.from_liquid_variable(node)
+
       is_exempt = Autoescape.configuration.exemptions.apply?(variable)
 
       if is_exempt
-        return output
+        output << o
+        return
       end
 
-      escape_if_unsafe(output)
+      output << escape_if_unsafe(o)
     end
 
     private
