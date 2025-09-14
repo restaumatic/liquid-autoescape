@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.files       += Dir.glob("spec/**/*")
   s.test_files   = Dir.glob("spec/**/*")
 
-  s.add_dependency "liquid", ">= 2.0", "< 6.0"
+  s.add_dependency "liquid", ">= 5.0", "< 6.0"
 
   s.add_development_dependency "appraisal", "~> 2.0"
   s.add_development_dependency "rake", "~> 12.0"
