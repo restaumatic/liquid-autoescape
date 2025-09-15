@@ -40,7 +40,7 @@ module Liquid
 
       end
 
-      Template.register_tag("autoescape", Autoescape)
+      Environment.default.register_tag("autoescape", Autoescape)
 
     end
   end
