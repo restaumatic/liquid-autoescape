@@ -248,7 +248,7 @@ describe "{% autoescape %}" do
     )
   end
 
-  it "asd" do
+  it "doesn't break blocks with multiple nodes" do
     verify_template_output(
       "{% autoescape %}{% if obj.foo != blank %}.test { a: func({{ obj.foo }}, {{ obj.baz }}); } {% endif %}{% endautoescape %}",
       ".test { a: func(bar, asd); } ",
