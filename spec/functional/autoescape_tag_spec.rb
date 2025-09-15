@@ -240,4 +240,20 @@ describe "{% autoescape %}" do
     )
   end
 
+  it "doesnt break other nested tags" do
+    verify_template_output(
+      "{% autoescape %}{% if obj.foo != blank %}{{ obj.foo }}{% endif %}{% endautoescape %}",
+      "bar",
+      "obj" => { "foo" => "bar" }
+    )
+  end
+
+  it "asd" do
+    verify_template_output(
+      "{% autoescape %}{% if obj.foo != blank %}.test { a: func({{ obj.foo }}, {{ obj.baz }}); } {% endif %}{% endautoescape %}",
+      ".test { a: func(bar, asd); } ",
+      { "obj" => { "foo" => "bar", "baz" => "asd" } }
+    )
+  end
+
 end

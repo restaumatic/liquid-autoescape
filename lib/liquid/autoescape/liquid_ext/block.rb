@@ -7,13 +7,17 @@ module Liquid
   class BlockBody
 
     def render_node(context, output, node)
-      os = BlockBody.render_node(context, [], node)
-      o = os[0] || ""
-
       if !node.is_a? Variable
-        output << o
+        output << BlockBody.render_node(context, +"", node)
         return
       end
+
+      # render to [] instead of "" to retain the SafeString status
+      os = BlockBody.render_node(context, [], node)
+
+      raise "A node variable should produce a single string output" unless os.size == 1
+      o = os[0]
+
 
       if context["in_capture"]
         output << o
