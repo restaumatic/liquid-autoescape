@@ -226,7 +226,7 @@ describe "{% autoescape %}" do
     )
   end
 
-  it "does not escape output of {% capture %}" do
+  it "does not escape literals from {% capture %}" do
     verify_template_output(
       "{% autoescape %}{% capture foo %}<div>{% endcapture %}{{ foo }}{% endautoescape %}",
       "<div>",
@@ -237,6 +237,21 @@ describe "{% autoescape %}" do
     verify_template_output(
       "{% autoescape %}{% capture foo %}<div>{% endcapture %}{{ foo | capitalize }}{% endautoescape %}",
       "&lt;div&gt;",
+    )
+  end
+
+  it "escapes in {% capture %}" do
+    verify_template_output(
+      "{% autoescape %}{% capture foo %}It's {{ dangerous }}!{% endcapture %}{{ foo }}{% endautoescape %}",
+      "It's &lt;div&gt;!",
+      "dangerous" => "<div>"
+    )
+  end
+  it "escapes in nested blocks in {% capture %}" do
+    verify_template_output(
+      "{% autoescape %}{% capture foo %}{% if true %}It's {{ dangerous }}{% endif %}!{% endcapture %}{{ foo }}{% endautoescape %}",
+      "It's &lt;div&gt;!",
+      "dangerous" => "<div>"
     )
   end
 
@@ -255,5 +270,6 @@ describe "{% autoescape %}" do
       { "obj" => { "foo" => "bar", "baz" => "asd" } }
     )
   end
+
 
 end

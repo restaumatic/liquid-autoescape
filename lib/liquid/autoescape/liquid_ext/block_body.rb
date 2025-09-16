@@ -16,11 +16,6 @@ module Liquid
       os = BlockBody.render_node(context, [], node)
 
       os.each do |o|
-        if context["in_capture"]
-          output << o
-          return
-        end
-
         if !Autoescape.configuration.global? && !context[Autoescape::ENABLED_FLAG]
           output << o
           return

@@ -7,10 +7,7 @@ module Liquid
   class Capture
     def render_to_output_buffer(context, output)
       context.resource_limits.with_capture do
-        captured = context.stack do
-          context["in_capture"] = true
-          render(context)
-        end
+        captured = render(context)
         context.scopes.last[@to] = Liquid::Autoescape::SafeString.mark_safe(captured)
       end
       output
