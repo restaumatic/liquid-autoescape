@@ -247,6 +247,7 @@ describe "{% autoescape %}" do
       "dangerous" => "<div>"
     )
   end
+
   it "escapes in nested blocks in {% capture %}" do
     verify_template_output(
       "{% autoescape %}{% capture foo %}{% if true %}It's {{ dangerous }}{% endif %}!{% endcapture %}{{ foo }}{% endautoescape %}",
