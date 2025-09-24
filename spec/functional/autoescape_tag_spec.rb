@@ -226,7 +226,7 @@ describe "{% autoescape %}" do
     )
   end
 
-  it "does not escape output of {% capture %}" do
+  it "does not escape literals from {% capture %}" do
     verify_template_output(
       "{% autoescape %}{% capture foo %}<div>{% endcapture %}{{ foo }}{% endautoescape %}",
       "<div>",
@@ -239,5 +239,38 @@ describe "{% autoescape %}" do
       "&lt;div&gt;",
     )
   end
+
+  it "escapes in {% capture %}" do
+    verify_template_output(
+      "{% autoescape %}{% capture foo %}It's {{ dangerous }}!{% endcapture %}{{ foo }}{% endautoescape %}",
+      "It's &lt;div&gt;!",
+      "dangerous" => "<div>"
+    )
+  end
+
+  it "escapes in nested blocks in {% capture %}" do
+    verify_template_output(
+      "{% autoescape %}{% capture foo %}{% if true %}It's {{ dangerous }}{% endif %}!{% endcapture %}{{ foo }}{% endautoescape %}",
+      "It's &lt;div&gt;!",
+      "dangerous" => "<div>"
+    )
+  end
+
+  it "doesnt break other nested tags" do
+    verify_template_output(
+      "{% autoescape %}{% if obj.foo != blank %}{{ obj.foo }}{% endif %}{% endautoescape %}",
+      "bar",
+      "obj" => { "foo" => "bar" }
+    )
+  end
+
+  it "doesn't break blocks with multiple nodes" do
+    verify_template_output(
+      "{% autoescape %}{% if obj.foo != blank %}.test { a: func({{ obj.foo }}, {{ obj.baz }}); } {% endif %}{% endautoescape %}",
+      ".test { a: func(bar, asd); } ",
+      { "obj" => { "foo" => "bar", "baz" => "asd" } }
+    )
+  end
+
 
 end

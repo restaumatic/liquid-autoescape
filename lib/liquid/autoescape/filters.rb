@@ -20,7 +20,7 @@ module Liquid
 
     end
 
-    Template.register_filter(Filters)
+    Environment.default.register_filter(Filters)
 
   end
 end

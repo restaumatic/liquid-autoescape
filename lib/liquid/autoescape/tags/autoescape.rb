@@ -1,5 +1,5 @@
 require "liquid"
-require "liquid/autoescape/liquid_ext/block"
+require "liquid/autoescape/liquid_ext/block_body"
 require "liquid/autoescape/liquid_ext/capture"
 require "liquid/autoescape/liquid_ext/standard_filters"
 
@@ -40,7 +40,7 @@ module Liquid
 
       end
 
-      Template.register_tag("autoescape", Autoescape)
+      Environment.default.register_tag("autoescape", Autoescape)
 
     end
   end
