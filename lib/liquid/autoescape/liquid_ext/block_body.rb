@@ -7,34 +7,27 @@ module Liquid
   class BlockBody
 
     def render_node(context, output, node)
-      if !node.is_a? Variable
-        output << BlockBody.render_node(context, +"", node)
+      not_variable = !node.is_a?(Variable)
+      not_enabled = !Autoescape.configuration.global? && !context[Autoescape::ENABLED_FLAG]
+
+      if not_variable || not_enabled || is_exempt?(node)
+        BlockBody.render_node(context, output, node)
         return
       end
 
       # render to [] instead of "" to retain the SafeString status
       os = BlockBody.render_node(context, [], node)
-
       os.each do |o|
-        if !Autoescape.configuration.global? && !context[Autoescape::ENABLED_FLAG]
-          output << o
-          return
-        end
-
-        variable = Autoescape::TemplateVariable.from_liquid_variable(node)
-
-        is_exempt = Autoescape.configuration.exemptions.apply?(variable)
-
-        if is_exempt
-          output << o
-          return
-        end
-
         output << escape_if_unsafe(o)
       end
     end
 
     private
+
+    def is_exempt?(node)
+      variable = Autoescape::TemplateVariable.from_liquid_variable(node)
+      Autoescape.configuration.exemptions.apply?(variable)
+    end
 
     def escape_if_unsafe(str)
       if Liquid::Autoescape::SafeString.is_safe? str

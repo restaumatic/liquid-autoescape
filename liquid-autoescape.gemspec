@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage     = "https://github.com/Within3/liquid-autoescape"
   s.license      = "MIT"
 
-  s.required_ruby_version = ">= 2.1.0"
+  s.required_ruby_version = ">= 3.0.0"
 
   s.files        = %w[LICENSE README.md]
   s.files       += Dir.glob("lib/**/*")
@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.test_files   = Dir.glob("spec/**/*")
 
   s.add_dependency "liquid", ">= 5.6", "< 6.0"
+  s.add_dependency "base64", "= 0.3"
 
   s.add_development_dependency "appraisal", "~> 2.0"
   s.add_development_dependency "rake", "~> 12.0"
